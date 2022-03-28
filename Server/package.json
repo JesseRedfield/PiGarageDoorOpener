@@ -1,0 +1,23 @@
+{
+  "name": "PiGarageDoorServer",
+  "version": "1.0.0",
+  "description": "Garage Door Opener Server, hosting a react app package, and a simple express server api",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JesseRedfield/PiGarageDoorOpener.git"
+  },
+  "author": "Jesse Redfield",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JesseRedfield/PiGarageDoorOpener/issues"
+  },
+  "homepage": "https://github.com/JesseRedfield/PiGarageDoorOpener#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "onoff": "^6.0.3"
+  }
+}

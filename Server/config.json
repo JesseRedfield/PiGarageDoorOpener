@@ -1,0 +1,23 @@
+{
+    "GarageDoors":[
+        {
+            "DoorName": "Door 1",
+            "OutputPin": 26,
+            "InputPin": 23
+        },
+        {
+            "DoorName": "Door 2",
+            "OutputPin": 20,
+            "InputPin": 24
+        },
+        {
+            "DoorName": "Door 3",
+            "OutputPin": 21,
+            "InputPin": 25
+        }
+    ],
+    "Server":
+    {
+        "port": 5000
+    }
+}
