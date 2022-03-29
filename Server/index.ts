@@ -1,6 +1,7 @@
-var express = require('express');
-var path = require('path');
-var Gpio = require('onoff').Gpio;
+import express from 'express';
+import * as path from 'path';
+import { Gpio } from 'onoff';
+
 
 async function main() {
     const PORT = 9000;
@@ -16,7 +17,7 @@ async function main() {
     app.get("/api/flash", async (_, res) => {
       try {
         var count = 5;
-        blinkInterval = setInterval(() => {
+        var blinkInterval = setInterval(() => {
             if (LED.readSync() === 0) { //check the pin state, if the state is 0 (or off)
                 LED.writeSync(1); //set pin state to 1 (turn LED on)
                 count--;
