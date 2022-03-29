@@ -4,7 +4,8 @@
   "description": "Garage Door Opener Server, hosting a react app package, and a simple express server api",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "build": "tsc",
+    "start": "node ./dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,7 @@
   "homepage": "https://github.com/JesseRedfield/PiGarageDoorOpener#readme",
   "dependencies": {
     "express": "^4.17.3",
-    "rpio": "^2.4.2"
+    "rpio": "github:JesseRedfield/node-rpio"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

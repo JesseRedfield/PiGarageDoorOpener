@@ -1,15 +1,22 @@
 import express from 'express';
 import * as path from 'path';
-import { Gpio } from 'onoff';
+const rpio = require('rpio');
 
 
 async function main() {
     const PORT = 9000;
     const HTML_PATH = path.resolve(__dirname, "Client");
+    const PIN = 26;
+    var rpio_options = {
+      gpiomem: true,          /* Use /dev/gpiomem */
+      mapping: 'gpio',        /* Use the gpio numbering scheme */
+      mock: undefined,        /* Emulate specific hardware in mock mode */
+      close_on_exit: true,    /* On node process exit automatically close rpio */
+    };
+
+    rpio.init(rpio_options);
 
     var app = express();
-  
-    var LED = new Gpio(26, 'out'); 
 
     app.use(express.static(HTML_PATH));
   
@@ -18,11 +25,11 @@ async function main() {
       try {
         var count = 5;
         var blinkInterval = setInterval(() => {
-            if (LED.readSync() === 0) { //check the pin state, if the state is 0 (or off)
-                LED.writeSync(1); //set pin state to 1 (turn LED on)
+            if (rpio.read(PIN) === 0) { //check the pin state, if the state is 0 (or off)
+                rpio.write(PIN, rpio.HIGH);
                 count--;
             } else {
-                LED.writeSync(0); //set pin state to 0 (turn LED off)
+                rpio.write(PIN, rpio.LOW); //set pin state to 0 (turn LED off)
                 if(count < 0) clearInterval(blinkInterval);
             }
             
