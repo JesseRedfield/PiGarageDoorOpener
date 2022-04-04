@@ -1,55 +1,99 @@
 import express from 'express';
 import * as path from 'path';
+import { Configuration, pinState } from './config';
+import { i2cProvider } from './i2cProvider';
+import { gpioProvider } from './gpioProvider';
 const rpio = require('rpio');
 
 
 async function main() {
-    const PORT = 9000;
-    const HTML_PATH = path.resolve(__dirname, "Client");
-    const PIN = 26;
-    var rpio_options = {
-      gpiomem: true,          /* Use /dev/gpiomem */
-      mapping: 'gpio',        /* Use the gpio numbering scheme */
-      mock: undefined,        /* Emulate specific hardware in mock mode */
-      close_on_exit: true,    /* On node process exit automatically close rpio */
-    };
+  /// LOAD CONFIGURATION
+  const config = new Configuration();
+  config.load("config.json");
+  const HTML_PATH = path.resolve(__dirname, "Client");
 
-    rpio.init(rpio_options);
+  /// CONFIGURE RPIO
+  rpio.init({
+    gpiomem: false,          /* Use /dev/gpiomem */
+    mapping: 'gpio',        /* Use the gpio numbering scheme */
+    mock: undefined,        /* Emulate specific hardware in mock mode */
+    close_on_exit: true,    /* On node process exit automatically close rpio */
+  });
 
-    var app = express();
+  const provider = new gpioProvider();
 
-    app.use(express.static(HTML_PATH));
-  
-    /* Flash LED */
-    app.get("/api/flash", async (_, res) => {
-      try {
-        var count = 5;
-        var blinkInterval = setInterval(() => {
-            if (rpio.read(PIN) === 0) { //check the pin state, if the state is 0 (or off)
-                rpio.write(PIN, rpio.HIGH);
-                count--;
-            } else {
-                rpio.write(PIN, rpio.LOW); //set pin state to 0 (turn LED off)
-                if(count < 0) clearInterval(blinkInterval);
-            }
-            
-        }, 250); //run the blinkLED function every 250ms
+  provider.open();
+  config.garageDoors.forEach(door => {
+    provider.enable_pin(door.inputPin, door.outputTriggerState);
+    rpio.open(door.inputPin, rpio.INPUT, door.inputOpenDoorState == pinState.HIGH ? pinState.LOW : pinState.HIGH);
+  });
 
+  /// STARTUP EXPRESS
+  var app = express();
+  app.use(express.static(HTML_PATH));
+
+  app.get("/api/doors/:key", async (req, res) => {
+    try {
+      if(req.params?.key != config.apiKey)
+      {
+        res.status(403);
+        res.send("Access Denied");
+        return;
+      }
+
+      const doors = config.garageDoors.map(door => {
+        return {
+          doorName: door.doorName,
+          doorDescription: door.doorDescription,
+          isOpen: rpio.read(door.inputPin) === door.inputOpenDoorState
+        }
+      });
+
+      res.status(200);
+      res.contentType("json");
+      res.send(JSON.stringify(doors));
+    } catch (ex) {
+      res.status(500);
+      res.contentType("html");
+      res.send(JSON.stringify(ex));
+    }
+  });
+
+  app.get("/api/trigger/:key/:doorName", async (req, res) => {
+    try {
+      if(req.params?.key != config.apiKey)
+      {
+        res.status(403);
+        res.send("Access Denied");
+        return;
+      }
+      const door = config.garageDoors.find(door => door.doorName.toLowerCase() === req.params?.doorName.toLowerCase());
+
+      if (door) {
+        provider.set(door.outputPin, door.outputTriggerState);
+        rpio.msleep(1000);
+        provider.set(door.outputPin, door.outputTriggerState == pinState.HIGH ? pinState.LOW : pinState.HIGH);
+        
         res.status(200);
         res.contentType("json");
-        res.send(JSON.stringify("success"));
-      } catch (ex) {
-        res.status(500);
-        res.contentType("html");
-        res.send(JSON.stringify(ex));
+        res.send(JSON.stringify(`Door: ${req.params?.doorName} Triggered`));
+      } else {
+        res.status(400);
+        res.contentType("json");
+        res.send(JSON.stringify(`Door: ${req.params?.doorName} Not Found`));
       }
-    });
-  
-    console.log(
-      `Listening on Port ${PORT} hosting files from path ${HTML_PATH}`
-    );
-  
-    app.listen(PORT, () => {});
-  }
-  
-  main();
+    } catch (ex) {
+      res.status(500);
+      res.contentType("html");
+      res.send(JSON.stringify(ex));
+    }
+  });
+
+  console.log(
+    `Listening on Port ${config.port} hosting files from path ${HTML_PATH}`
+  );
+
+  app.listen(config.port, () => { });
+}
+
+main();

@@ -1,23 +1,38 @@
 {
-    "GarageDoors":[
+    "garageDoors": [
         {
-            "DoorName": "Door 1",
-            "OutputPin": 26,
-            "InputPin": 23
+            "doorName": "Green",
+            "doorDescription": "Green Door",
+            "inputPin": 1,
+            "inputOpenDoorState": 1,
+            "outputPin": 1,
+            "outputTriggerState": 1
         },
         {
-            "DoorName": "Door 2",
-            "OutputPin": 20,
-            "InputPin": 24
+            "doorName": "Yellow",
+            "doorDescription": "Yellow Door",
+            "inputPin": 2,
+            "inputOpenDoorState": 1,
+            "outputPin": 2,
+            "outputTriggerState": 1
         },
         {
-            "DoorName": "Door 3",
-            "OutputPin": 21,
-            "InputPin": 25
+            "doorName": "Blue",
+            "doorDescription": "Blue Door",
+            "inputPin": 3,
+            "inputOpenDoorState": 1,
+            "outputPin": 3,
+            "outputTriggerState": 1
+        },
+        {
+            "doorName": "Red",
+            "doorDescription": "Red Door",
+            "inputPin": 4,
+            "inputOpenDoorState": 1,
+            "outputPin": 4,
+            "outputTriggerState": 1
         }
     ],
-    "Server":
-    {
-        "port": 5000
-    }
+    "port": 9000,
+    "apiKey": "0000-0000-0000-0000"
 }
