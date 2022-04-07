@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/JesseRedfield/PiGarageDoorOpener#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.3",
     "rpio": "github:JesseRedfield/node-rpio"
   },

@@ -3,7 +3,7 @@
         {
             "doorName": "Green",
             "doorDescription": "Green Door",
-            "inputPin": 1,
+            "inputPin": 17,
             "inputOpenDoorState": 1,
             "outputPin": 1,
             "outputTriggerState": 1
@@ -11,7 +11,7 @@
         {
             "doorName": "Yellow",
             "doorDescription": "Yellow Door",
-            "inputPin": 2,
+            "inputPin": 17,
             "inputOpenDoorState": 1,
             "outputPin": 2,
             "outputTriggerState": 1
@@ -19,7 +19,7 @@
         {
             "doorName": "Blue",
             "doorDescription": "Blue Door",
-            "inputPin": 3,
+            "inputPin": 17,
             "inputOpenDoorState": 1,
             "outputPin": 3,
             "outputTriggerState": 1
@@ -27,7 +27,7 @@
         {
             "doorName": "Red",
             "doorDescription": "Red Door",
-            "inputPin": 4,
+            "inputPin": 17,
             "inputOpenDoorState": 1,
             "outputPin": 4,
             "outputTriggerState": 1

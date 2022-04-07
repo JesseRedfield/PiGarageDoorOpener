@@ -7,8 +7,9 @@ run ./setup_pi.sh and reboot
 
 ## Build Startup
 1) install npm and latest node LTS
+2) install typscript compiler: npm install -g typescript
 2) install expo-cli: npm install -g expo-cli
-3) client development run: `cd Client` then `npm run:web` OR `npm run:android`
+3) client development run: `cd Client` then `npm run web` OR `npm run android`
 4) server development run: `cd Server` then `npm run dev`
 
 ## Package server and push to pi
