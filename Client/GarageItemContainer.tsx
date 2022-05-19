@@ -2,14 +2,18 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableHighlight,
+  Dimensions,
+  Image
 } from "react-native";
 import React from "react";
-import { GarageDoor } from "./garageDoor";
+import { GarageDoor, Item, Light } from "./garageItems";
+
+const URI = "http://192.168.1.232:9000";
+const API_KEY = "0000-0000-0000-0000";
 
 export default function GarageDoorContainer() {
-  const [data, setData] = React.useState<GarageDoor[]>([]);
+  const [data, setData] = React.useState<Item[]>([]);
   const [recheck, setRecheck] = React.useState(true);
   const [isLoading, setLoading] = React.useState(true);
 
@@ -28,7 +32,7 @@ export default function GarageDoorContainer() {
   React.useEffect(() => {
     if (isLoading || recheck) {
       console.log("fetching");
-      fetch("https://garage.jred840.net/api/doors/0000-0000-0000-0000")
+      fetch(`${URI}/api/status/${API_KEY}`)
         .then((response) => response.json())
         .then((json) => {
           setData(json);
@@ -45,28 +49,30 @@ export default function GarageDoorContainer() {
   return <View style={styles.container}>{GetDoors(data)}</View>;
 }
 
-function buildDoorRow(doors: GarageDoor[]) {
+function buildDoorRow(doors: Item[]) {
   return doors.map((door) => (
     <View style={styles.doorItem}>
       <TouchableHighlight
         onPress={() => {
 
           fetch(
-            `https://garage.jred840.net/api/trigger/0000-0000-0000-0000/${door.doorName}`
+            `${URI}/api/trigger/${API_KEY}/${door.name}`
           );
         }}
       >
-        <Image
-          source={require("./assets/GarageDoorClosed.png")}
-          style={{
-            alignSelf: "center",
-            width: 0.25 * innerWidth,
-            height: 0.25 * innerWidth,
-          }}
+        { door.type == "door" ?
+          <Image
+            source={(door as GarageDoor).isOpen ? require("./assets/GarageDoorOpen.png"): require("./assets/GarageDoorClosed.png")}
+            style={styles.image}
+          /> :
+          <Image
+          source={(door as Light).isOn ? require("./assets/LightOn.png"): require("./assets/LightOff.png")}
+          style={styles.image}
         />
+        }
       </TouchableHighlight>
       <Text numberOfLines={1} adjustsFontSizeToFit style={styles.text}>
-        {door.doorDescription}
+        {door.description}
       </Text>
     </View>
   ));
@@ -75,9 +81,9 @@ function buildDoorRow(doors: GarageDoor[]) {
 function GetDoors(doors: GarageDoor[]) {
   const rows: JSX.Element[] = [];
 
-  for (var i = 0; i < doors.length; i += 3) {
+  for (var i = 0; i < doors.length; i += 2) {
     rows.push(
-      <View style={styles.row}>{buildDoorRow(doors.slice(i, i + 3))}</View>
+      <View style={styles.row}>{buildDoorRow(doors.slice(i, i + 2))}</View>
     );
   }
   return rows;
@@ -86,24 +92,33 @@ function GetDoors(doors: GarageDoor[]) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignSelf: "stretch",
+    flexDirection: "column",
+    alignItems: "flex-start",
     backgroundColor: "#232629",
   },
   row: {
-    flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around",
-    alignContent: "flex-start",
-    alignSelf: "stretch",
     backgroundColor: "#232629",
+    alignItems: "flex-start",
+    height: 0.03 * Dimensions.get('window').width + 0.45 * Dimensions.get('window').width
   },
   doorItem: {
-    flex: 1,
-    alignSelf: "stretch",
+    flexDirection: "column",
+    backgroundColor: "#232629",
+    width: 0.50 * Dimensions.get('window').width,
+    height: 0.035 * Dimensions.get('window').width + 0.40 * Dimensions.get('window').width
   },
   text: {
+    flex:1,
     color: "#fff",
-    fontSize: 0.03 * innerWidth,
+    fontSize: 0.03 * Dimensions.get('window').width,
     textAlign: "center",
+    textAlignVertical: "top",
+    width: 0.50 * Dimensions.get('window').width,
   },
+  image: {
+    alignSelf: "center",
+    width: 0.40 * Dimensions.get('window').width,
+    height: 0.40 * Dimensions.get('window').width
+  }
 });

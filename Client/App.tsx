@@ -1,8 +1,7 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Dimensions, View, StatusBar } from "react-native";
 import TitleBar from "./TitleBar";
 import React from "react";
-import GarageDoorContainer from "./GarageDoorContainer";
+import GarageItemContainer from "./GarageItemContainer";
 
 function debounce(fn: () => void, ms:number) {
   let timer:number | null = null;
@@ -20,30 +19,31 @@ function debounce(fn: () => void, ms:number) {
 
 export default function App() {
   const [dimensions, setDimensions] = React.useState({
-    height: window.innerHeight,
-    width: window.innerWidth,
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
   });
 
   React.useEffect(() => {
     const debouncedHandleResize = debounce(function handleResize() {
       setDimensions({
-        height: window.innerHeight,
-        width: window.innerWidth,
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width,
       });
     }, 1000);
 
-    window.addEventListener("resize", debouncedHandleResize);
 
+    Dimensions.addEventListener("change", debouncedHandleResize);
+   
     return () => {
-      window.removeEventListener("resize", debouncedHandleResize);
+      Dimensions.removeEventListener("change", debouncedHandleResize)
     };
   });
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#1B8E99" barStyle='light-content' hidden={false}/>
       <TitleBar />
-      <GarageDoorContainer />
-      <StatusBar style="auto" />
+      <GarageItemContainer />
     </View>
   );
 }
@@ -51,5 +51,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FF2629",
   },
 });

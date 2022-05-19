@@ -1,4 +1,4 @@
-import { pinState } from "./config";
+import { pinState, provider } from "./provider";
 const rpio = require("rpio");
 
 // i2c provider for EP-0099 https://wiki.52pi.com/index.php?title=EP-0099
@@ -14,17 +14,29 @@ const rpio = require("rpio");
 // address: 0x03  Relay 3 0x00 - OFF 0x255 - ON
 // address: 0x04  Relay 4 0x00 - OFF 0x255 - ON
 
-export class i2cProvider {
+
+export class i2cProvider implements provider {
+  pins: number[] = [];
+
   open() {
     rpio.i2cBegin();
     rpio.i2cSetSlaveAddress(0x10);
+    this.pins[0] = pinState.LOW;
+    this.pins[1] = pinState.LOW;
+    this.pins[2] = pinState.LOW;
+    this.pins[3] = pinState.LOW;
+    this.pins[4] = pinState.LOW;
   }
 
   close() {
     rpio.i2cEnd();
   }
 
-  enable_pin(pin: number, onState: pinState) {
+  enable_write_pin(pin: number, onState: pinState) {
+    //i2c provider does not require pin enable/disable
+  }
+
+  enable_read_pin(pin: number, onState: pinState) {
     //i2c provider does not require pin enable/disable
   }
 
@@ -37,6 +49,16 @@ export class i2cProvider {
     if (address == 0x255) return;
 
     rpio.i2cWrite(Buffer.from([address, this.getPinValue(value)]));
+    this.pins[pin] = value;
+  }
+
+  get(pin:number) : pinState
+  {
+    if(typeof this.pins[pin] === 'undefined') {
+      return pinState.LOW;
+    }
+    
+    return this.pins[pin];
   }
 
   private getPinAddress(pin: number): number {
