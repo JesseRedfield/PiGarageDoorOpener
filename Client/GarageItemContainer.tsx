@@ -19,15 +19,15 @@ export default function GarageDoorContainer() {
 
   React.useEffect(() => {
     let interval = null;
-    if (!isLoading && !recheck) {
+    if (!isLoading) {
       console.log("starting interval");
       interval = setInterval(() => {
         setRecheck(true);
-      }, 60 * 1000);
+      }, 10 * 1000);
     } else if (interval != null) {
       clearInterval(interval);
     }
-  }, [isLoading, recheck]);
+  }, [isLoading]);
 
   React.useEffect(() => {
     if (isLoading || recheck) {
@@ -47,7 +47,7 @@ export default function GarageDoorContainer() {
   }, [recheck]);
 
   return <View style={styles.container}>{GetDoors(data)}</View>;
-}
+
 
 function buildDoorRow(doors: Item[]) {
   return doors.map((door) => (
@@ -56,8 +56,9 @@ function buildDoorRow(doors: Item[]) {
         onPress={() => {
 
           fetch(
-            `${URI}/api/trigger/${API_KEY}/${door.name}`
+            door.type == "door" ? `${URI}/api/trigger/${API_KEY}/${door.name}` : `${URI}/api/switch/${API_KEY}/${door.name}`
           );
+          setRecheck(true);
         }}
       >
         { door.type == "door" ?
@@ -88,7 +89,7 @@ function GetDoors(doors: GarageDoor[]) {
   }
   return rows;
 }
-
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
