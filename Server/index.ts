@@ -1,11 +1,7 @@
 import express from "express";
 import * as path from "path";
 import { Configuration } from "./config";
-import {
-  pinState,
-  providerType,
-  IProviderDictionary,
-} from "./provider";
+import { pinState, providerType, IProviderDictionary } from "./provider";
 import { i2cProvider } from "./i2cProvider";
 import { gpioProvider } from "./gpioProvider";
 const rpio = require("rpio");
@@ -183,7 +179,7 @@ async function main() {
     }
   });
 
-  app.get("/api/status/:key", async (req, res) => { 
+  app.get("/api/status/:key", async (req, res) => {
     try {
       if (req.params?.key != config.apiKey) {
         res.status(403);
@@ -227,44 +223,38 @@ async function main() {
   app.listen(config.port, () => {});
 
   var intervalID = setInterval(() => {
-    config.lights.forEach(light => {
-      const currentTime = (new Date()).getHours() * 60 + (new Date()).getMinutes();
-      const onDate = (new Date('1970-01-01T' + light.scheduleOn));
-      const offDate = (new Date('1970-01-01T' + light.scheduleOff));
+    config.lights.forEach((light) => {
+      const currentTime = new Date().getHours() * 60 + new Date().getMinutes();
+      const onDate = new Date("1970-01-01T" + light.scheduleOn);
+      const offDate = new Date("1970-01-01T" + light.scheduleOff);
 
-      if(onDate.getHours() && offDate.getHours())
-      {
-          const onTime = onDate.getHours() * 60 + onDate.getMinutes();
-          const offTime = offDate.getHours() * 60 + offDate.getMinutes();
-        
-          if(onTime < currentTime && offTime > currentTime)
-          {
-            if(!light.timerOn)
-            {
-              providers[light.provider]?.set(light.pin, light.triggerState);
-              light.timerOn = true;
-            }
+      if (onDate.getHours() && offDate.getHours()) {
+        const onTime = onDate.getHours() * 60 + onDate.getMinutes();
+        const offTime = offDate.getHours() * 60 + offDate.getMinutes();
+
+        if (onTime < currentTime && offTime > currentTime) {
+          if (!light.timerOn) {
+            providers[light.provider]?.set(light.pin, light.triggerState);
+            light.timerOn = true;
           }
-          else
-          {
-            if(light.timerOn)
-            {
-              providers[light.provider]?.set(light.pin, light.triggerState == pinState.HIGH
-                ? pinState.LOW
-                : pinState.HIGH);
-              light.timerOn = false;
-            }
+        } else {
+          if (light.timerOn) {
+            providers[light.provider]?.set(
+              light.pin,
+              light.triggerState == pinState.HIGH ? pinState.LOW : pinState.HIGH
+            );
+            light.timerOn = false;
           }
+        }
       }
-    });  
+    });
   }, 60 * 1000);
-    
+
   process.on("SIGTERM", () => {
     console.log("Exiting");
     providers[providerType.i2c].close();
     providers[providerType.gpio].close();
   });
 }
-
 
 main();
