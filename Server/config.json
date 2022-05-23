@@ -5,32 +5,42 @@
             "doorDescription": "Green Door",
             "inputPin": 17,
             "inputOpenDoorState": 1,
+            "inputProvider": "gpio",
             "outputPin": 1,
-            "outputTriggerState": 1
+            "outputTriggerState": 1,
+            "outputProvider": "i2c"
         },
         {
             "doorName": "Yellow",
             "doorDescription": "Yellow Door",
             "inputPin": 17,
             "inputOpenDoorState": 1,
+            "inputProvider": "gpio",
             "outputPin": 2,
-            "outputTriggerState": 1
+            "outputTriggerState": 1,
+            "outputProvider": "i2c"
         },
         {
             "doorName": "Blue",
             "doorDescription": "Blue Door",
             "inputPin": 17,
             "inputOpenDoorState": 1,
+            "inputProvider": "gpio",
             "outputPin": 3,
-            "outputTriggerState": 1
-        },
+            "outputTriggerState": 1,
+            "outputProvider": "i2c"
+        }
+    ],
+    "lights": [
         {
-            "doorName": "Red",
-            "doorDescription": "Red Door",
-            "inputPin": 17,
-            "inputOpenDoorState": 1,
-            "outputPin": 4,
-            "outputTriggerState": 1
+            "lightName": "Light",
+            "lightDescription": "Red Light",
+            "pin": 6,
+            "triggerState": 1,
+            "provider": "gpio",
+            "scheduleOn": "22:30:00",
+            "scheduleOff": "22:45:00",
+            "timerOn": false
         }
     ],
     "port": 9000,
