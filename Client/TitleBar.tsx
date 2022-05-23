@@ -4,11 +4,7 @@ import React from "react";
 export default function TitleBar() {
   return (
     <View style={styles.container}>
-      <Text
-        numberOfLines={1}
-        adjustsFontSizeToFit
-        style={styles.text}
-      >
+      <Text numberOfLines={1} adjustsFontSizeToFit style={styles.text}>
         Door Opener
       </Text>
     </View>
@@ -17,7 +13,7 @@ export default function TitleBar() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 0.12 * Dimensions.get('window').width,
+    height: 0.12 * Dimensions.get("window").width,
     backgroundColor: "#1B8E99",
     alignItems: "center",
     justifyContent: "center",
@@ -25,7 +21,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#fff",
     textAlign: "center",
-    fontSize: 0.10 * Dimensions.get('window').width,
+    fontSize: 0.1 * Dimensions.get("window").width,
     width: "100%",
   },
 });

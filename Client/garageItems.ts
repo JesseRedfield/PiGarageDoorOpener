@@ -1,5 +1,5 @@
 export type GarageDoor = {
-  type:string;
+  type: string;
   name: string;
   description: string;
   isOpen: boolean;

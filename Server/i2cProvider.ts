@@ -14,7 +14,6 @@ const rpio = require("rpio");
 // address: 0x03  Relay 3 0x00 - OFF 0x255 - ON
 // address: 0x04  Relay 4 0x00 - OFF 0x255 - ON
 
-
 export class i2cProvider implements provider {
   pins: number[] = [];
 
@@ -52,12 +51,11 @@ export class i2cProvider implements provider {
     this.pins[pin] = value;
   }
 
-  get(pin:number) : pinState
-  {
-    if(typeof this.pins[pin] === 'undefined') {
+  get(pin: number): pinState {
+    if (typeof this.pins[pin] === "undefined") {
       return pinState.LOW;
     }
-    
+
     return this.pins[pin];
   }
 

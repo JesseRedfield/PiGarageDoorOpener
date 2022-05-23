@@ -10,7 +10,7 @@ export type Light = {
   scheduleOn: string;
   scheduleOff: string;
   timerOn: boolean;
-}
+};
 
 export type GarageDoor = {
   doorName: string;
@@ -36,7 +36,7 @@ export class Configuration {
   load(path: string): void {
     const data = fs.readFileSync(path, "utf-8");
     const configuration = JSON.parse(data) as Configuration;
-    configuration.lights.forEach(light => light.timerOn = false);
+    configuration.lights.forEach((light) => (light.timerOn = false));
 
     this.garageDoors = configuration.garageDoors;
     this.lights = configuration.lights;

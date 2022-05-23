@@ -1,16 +1,14 @@
-import { provider, pinState} from "./provider";
+import { provider, pinState } from "./provider";
 
 const rpio = require("rpio");
 
 export class gpioProvider implements provider {
   pins: number[] = [];
 
-  open() {
-
-  }
+  open() {}
 
   close() {
-    this.pins.forEach(pin => {
+    this.pins.forEach((pin) => {
       this.disable_pin(pin);
     });
   }
@@ -42,10 +40,8 @@ export class gpioProvider implements provider {
     rpio.write(pin, value);
   }
 
-  get(pin: number) : pinState {
-    if (rpio.read(pin))
-      return pinState.HIGH;
-    else
-      return pinState.LOW;
+  get(pin: number): pinState {
+    if (rpio.read(pin)) return pinState.HIGH;
+    else return pinState.LOW;
   }
 }

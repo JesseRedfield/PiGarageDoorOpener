@@ -4,8 +4,8 @@ export enum pinState {
 }
 
 export enum providerType {
-  gpio = 'gpio',
-  i2c = 'i2c',
+  gpio = "gpio",
+  i2c = "i2c",
 }
 
 export type IProviderDictionary = {
@@ -19,7 +19,7 @@ export interface provider {
 
   enable_write_pin(pin: number, onState: pinState): void;
 
-  enable_read_pin(pin: number, onState: pinState): void
+  enable_read_pin(pin: number, onState: pinState): void;
 
   disable_pin(pin: number): void;
 
